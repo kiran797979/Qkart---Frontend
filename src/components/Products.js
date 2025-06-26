@@ -10,7 +10,6 @@ import { Box } from "@mui/system";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import React, { useEffect, useState } from "react";
-import { config } from "../App";
 import Footer from "./Footer";
 import Header from "./Header";
 import "./Products.css";
@@ -85,7 +84,7 @@ const Products = () => {
     try{
       if (append) setIsLoadingMore(true);
       else updateFecthed(true);
-      let url=config.endpoint;
+      let url=process.env.REACT_APP_API_URL;
       const limit = 20;
       let product= await axios.get(`${url}/api/v1/products?limit=${limit}&skip=${skip}`);
       if (append) {
@@ -122,7 +121,7 @@ const Products = () => {
   const performSearch = async (text) => {
     try{
       // updateProductNotFound(false)
-      let url=config.endpoint;
+      let url=process.env.REACT_APP_API_URL;
      let product= await axios.get(`${url}/api/v1/products/search?value=${text}`).catch((e)=>{updateProductNotFound(true)})
      
      if(product.data){
@@ -216,7 +215,7 @@ const Products = () => {
 
   try {
     // TODO: CRIO_TASK_MODULE_CART - Pass Bearer token inside "Authorization" header to get data from "GET /cart" API and return the response data
-   let url=config.endpoint+'/cart';
+   let url=process.env.REACT_APP_API_URL+'/cart';
    let cartDatas=await axios.get(url,{headers:{Authorization:`Bearer ${token}`}});
    return cartDatas.data;
 
@@ -301,7 +300,7 @@ const addToCart = async (token, items,products,productId,qty,options = { prevent
 
       if(options.preventDuplicate===true){
         try{
-            let url=config.endpoint+'/cart';
+            let url=process.env.REACT_APP_API_URL+'/cart';
             let res=await axios.post(url,{"productId":productId,"qty":qty},{headers:{Authorization:`Bearer ${token}`}});
             const cartData=await generateCartItemsFrom(res.data,products)
             updateCartData(cartData);
@@ -326,7 +325,7 @@ const addToCart = async (token, items,products,productId,qty,options = { prevent
                 items[index]['qty']--;
             }
             //  udpate ite4ms
-            let url=config.endpoint+'/cart';
+            let url=process.env.REACT_APP_API_URL+'/cart';
             let res=await axios.post(url,{"productId":productId,"qty":items[index]["qty"]},{headers:{Authorization:`Bearer ${token}`}});
             const cartData=await generateCartItemsFrom(res.data,products)
             updateCartData(cartData);
